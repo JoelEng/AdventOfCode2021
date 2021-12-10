@@ -1,6 +1,7 @@
 use std::fs;
 
 fn main() {
+    part_one();
     part_two();
 }
 
@@ -13,7 +14,7 @@ fn list_of_input() -> Vec<i32> {
     input.map(|word| word.parse::<i32>().expect("Wrong input file. Something was not a number")).collect()
 }
 
-fn _part_one() {
+fn part_one() {
     let numbers = list_of_input();
     let mut counter = 0;
 
