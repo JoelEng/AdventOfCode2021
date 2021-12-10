@@ -9,7 +9,7 @@ fn get_input() -> Vec<(char, u32)> {
     let input = fs::read_to_string("input.txt")
         .expect("Failed to read file");
     
-    let input = input.split('\n');
+    let input = input.lines();
 
     input.map(|word| (word.chars().next().unwrap(), word.chars().last().unwrap().to_digit(10).unwrap())).collect()
 }
