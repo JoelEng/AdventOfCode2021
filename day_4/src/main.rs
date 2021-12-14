@@ -47,7 +47,7 @@ fn part_one() {
     };
 }
 
-fn part_two() {
+fn _part_two() {
     let (draws, mut boards) = get_input();
 
     for draw in draws {
