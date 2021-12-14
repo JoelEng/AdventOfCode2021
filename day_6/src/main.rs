@@ -8,6 +8,7 @@ fn main() {
     solve();
 }
 
+//The second number in a fish tuple is the "weight" of the fish, i.e how many normal fish it is counted as.
 fn get_input() -> Vec<(u8, u64)> {
     let input = fs::read_to_string(INPUT_FILE)
         .expect("Failed to read file");
@@ -21,7 +22,7 @@ fn get_input() -> Vec<(u8, u64)> {
 fn solve() {
     let mut fish = get_input();
 
-    for n in 0..NBR_OF_DAYS {
+    for _ in 0..NBR_OF_DAYS {
         decrease_timers(&mut fish);
     }
 
