@@ -49,17 +49,16 @@ impl Board {
         }
         let won = row_won || col_won;
 
-        //Remove this has_won-check for part 1
         if won && !self.has_won {
             println!("{:?} has won!", self);
-            self.calc_points(sqr_index, square);
+            self.calc_points(square);
             self.has_won = true;
         }
 
         row_won || col_won
     }
 
-    pub fn calc_points(&self, sqr_index: usize, square: u8) {
+    pub fn calc_points(&self, square: u8) {
         let mut sum = 0;
         let values = self.values.iter().flatten();
 

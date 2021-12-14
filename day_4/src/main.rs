@@ -9,6 +9,7 @@ const BOARD_SIZE: usize = 5;
 
 fn main() {
     part_one();
+    //part_two(); //The very last number is the answer to the puzzle
 }
 
 fn get_input() -> (Vec<u8>, Vec<board::Board>) {
@@ -37,20 +38,21 @@ fn get_input() -> (Vec<u8>, Vec<board::Board>) {
 fn part_one() {
     let (draws, mut boards) = get_input();
 
-    //Use this code for part 2
-    for draw in draws {
-        for board in &mut boards {
-            board.fill_in(&draw);
-        }
-    };
-
-    //Use this code for part 1
-    /*'outer:for draw in draws {
+    'outer:for draw in draws {
         for board in &mut boards {
             if board.fill_in(&draw) {
                 break 'outer;
             }
         }
-    };*/
+    };
+}
 
+fn part_two() {
+    let (draws, mut boards) = get_input();
+
+    for draw in draws {
+        for board in &mut boards {
+            board.fill_in(&draw);
+        }
+    };
 }
