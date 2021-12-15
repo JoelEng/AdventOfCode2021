@@ -32,11 +32,11 @@ fn part_two() {
     //height of the vec, i.e the largest number in it
     let height = positions.iter().max().unwrap();
 
-    let mut min_fuel: i64 = 10000000000;
+    let mut min_fuel = i32::MAX;
     for middle in 0..*height {
         let mut fuel_use = 0;
         for pos in &positions {
-            let distance = (*pos as i64 - middle as i64).abs();
+            let distance = (*pos as i32 - middle as i32).abs();
             fuel_use += distance * (distance + 1) / 2;
         }
         if fuel_use < min_fuel {
