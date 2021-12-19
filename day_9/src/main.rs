@@ -93,16 +93,14 @@ fn find_basin_containing(basins: &Vec<Vec<(usize, usize)>>, row: usize, col: usi
 }
 
 fn is_low_point(input: &Vec<Vec<u8>>, row: usize, col: usize, num: u8) -> bool {
-    let mut is_low_point = true;
     if row > 0 && num >= input[row - 1][col] {
-        is_low_point = false;
+        return false;
     } else if row < input.iter().len() - 1 && num >= input[row + 1][col] {
-        is_low_point = false;
+        return false;
     } else if col > 0 && num >= input[row][col - 1] {
-        is_low_point = false;
+        return false;
     } else if col < input[0].iter().len() - 1 && num >= input[row][col + 1] {
-        is_low_point = false;
+        return false;
     }
-
-    is_low_point
+    true
 }
