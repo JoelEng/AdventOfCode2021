@@ -5,7 +5,22 @@ const INPUT_FILE: &str = "input.txt";
 const MATRIX_SIZE: usize = 1500;
 
 fn main() {
-    solve();
+    let (mut matrix, folds) = get_input();
+    let mut first_time = true;
+
+    for (dir, index) in folds {
+        if dir == 'x' {
+            matrix = fold_x(index, &mut matrix);
+        } else {
+            matrix = fold_y(index, &mut matrix);
+        }
+        if first_time {
+            println!("Answer part one: {}", count_dots(&matrix));
+            first_time = false;
+        }
+    }
+    println!("Answer part two: ");
+    print_matrix(&matrix);
 }
 
 fn get_input() -> (Vec<Vec<bool>>, Vec<(char, usize)>) {
@@ -30,25 +45,6 @@ fn get_input() -> (Vec<Vec<bool>>, Vec<(char, usize)>) {
     }
 
     (matrix, folds)
-}
-
-fn solve() {
-    let (mut matrix, folds) = get_input();
-    let mut first_time = true;
-
-    for (dir, index) in folds {
-        if dir == 'x' {
-            matrix = fold_x(index, &mut matrix);
-        } else {
-            matrix = fold_y(index, &mut matrix);
-        }
-        if first_time {
-            println!("Answer part one: {}", count_dots(&matrix));
-            first_time = false;
-        }
-    }
-    println!("Answer part two: ");
-    print_matrix(&matrix);
 }
 
 fn fold_x(fold_index: usize, matrix: &mut Vec<Vec<bool>>) -> Vec<Vec<bool>> {
