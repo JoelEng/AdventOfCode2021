@@ -1,6 +1,6 @@
-# Advent of Code 2020 :christmas_tree: :crab:
+# Advent of Code 2021 :christmas_tree: :crab:
 
-My solutions for Advent of Code 2020.
+My solutions for Advent of Code 2021.
 
 Project structure and setup kindly stolen from [AxlLind](https://github.com/AxlLind) and expanded upon.
 

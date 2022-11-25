@@ -11,7 +11,7 @@ fn extract_time(s: &str) -> Option<u32> {
 
 fn main() {
     let mut total_time = 0;
-    let mut got_to = 25;
+    let mut days_completed = 0;
     for day_num in 1..=25 {
         let day = format!("{:0>2}", day_num);
         let cmd = Command::new("cargo")
@@ -20,16 +20,16 @@ fn main() {
             .unwrap();
         let output = String::from_utf8(cmd.stdout).unwrap();
         total_time += match extract_time(&output) {
-            Some(x) => x,
-            None => {
-                got_to = day_num - 1;
-                break;
+            Some(x) => {
+                days_completed += 1;
+                x
             }
+            None => continue,
         };
         println!("\x1b[4;1mDay {}:\n\x1b[0m{}", day, output);
     }
     print!("\x1b[4;1m");
-    if got_to == 25 {
+    if days_completed == 25 {
         println!(
             "🎄 All days completed! 🎄 Total time: {}ms\x1b[0m",
             total_time
@@ -37,7 +37,7 @@ fn main() {
     } else {
         println!(
             "{} days completed. Total time: {}ms\x1b[0m",
-            got_to, total_time
+            days_completed, total_time
         );
     }
 }
