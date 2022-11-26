@@ -4,26 +4,26 @@ use petgraph::{
 };
 
 #[aoc::main(15)]
-fn main(input: &str) -> (&str, u64) {
-    let (g, nodes) = create_graph(get_input(input));
+fn main(input: &str) -> (u64, u64) {
+    (lowest_risk_path(1, input), lowest_risk_path(5, input))
+}
+
+fn lowest_risk_path(size: u64, input: &str) -> u64 {
+    let (g, nodes) = create_graph(get_input(input, size));
     let path = dijkstra(
         &g,
         nodes[0][0],
         Some(nodes[nodes.len() - 1][nodes[0].len() - 1]),
         |e| *e.weight(),
     );
-
-    (
-        "INCORRECT",
-        path[&nodes[nodes.len() - 1][nodes[0].len() - 1]],
-    )
+    path[&nodes[nodes.len() - 1][nodes[0].len() - 1]]
 }
 
-fn get_input(input: &str) -> Vec<Vec<u64>> {
+fn get_input(input: &str, size: u64) -> Vec<Vec<u64>> {
     let mut v: Vec<Vec<u64>> = Vec::new();
     for line in input.lines() {
         let mut elems: Vec<u64> = Vec::new();
-        for i in 0..5 {
+        for i in 0..size {
             let mut values: Vec<u64> = line
                 .chars()
                 .map(|c| {
@@ -36,7 +36,7 @@ fn get_input(input: &str) -> Vec<Vec<u64>> {
         v.push(elems);
     }
     let mut matrix: Vec<Vec<u64>> = Vec::new();
-    for i in 0..5 {
+    for i in 0..size {
         for line in &v {
             let values: Vec<u64> = line.iter().map(|c| (c + i) % 10 + (c + i) / 10).collect();
             matrix.push(values);
