@@ -1,13 +1,5 @@
-const INPUT_FILE: &str = "input.txt";
-
-fn main() {
-    part_one();
-    part_two();
-}
-
-fn get_input() -> Vec<(Vec<String>, Vec<String>)> {
-    let input = std::fs::read_to_string(INPUT_FILE).expect("Failed to read file");
-
+#[aoc::main(08)]
+fn main(input: &str) -> (u32, usize) {
     let input: Vec<Vec<String>> = input
         .lines()
         .map(|line| {
@@ -16,15 +8,21 @@ fn get_input() -> Vec<(Vec<String>, Vec<String>)> {
                 .collect::<Vec<String>>()
         })
         .collect();
-    
-    input.iter().map(|line| {
-        let mut split = line.split(|word| word == "|");
-        (Vec::from(split.next().unwrap()), Vec::from(split.next().unwrap()))
-    }).collect()
+
+    let input: Vec<(Vec<String>, Vec<String>)> = input
+        .iter()
+        .map(|line| {
+            let mut split = line.split(|word| word == "|");
+            (
+                Vec::from(split.next().unwrap()),
+                Vec::from(split.next().unwrap()),
+            )
+        })
+        .collect();
+    (p1(&input), p2(input.clone()))
 }
 
-fn part_one() {
-    let input = get_input();
+fn p1(input: &Vec<(Vec<String>, Vec<String>)>) -> u32 {
     let output: Vec<Vec<String>> = input.iter().map(|(_, o)| o.clone()).collect();
     let mut nbr_of_words = [0u32; 10];
 
@@ -38,27 +36,47 @@ fn part_one() {
         }
     }
 
-    println!("Answer part 1: {}", nbr_of_words.iter().sum::<u32>());
+    nbr_of_words.iter().sum::<u32>()
 }
 
-fn part_two() {
-    let lines = get_input();
+fn p2(lines: Vec<(Vec<String>, Vec<String>)>) -> usize {
     let mut sum = 0;
 
     for line in lines {
         let mut value = 0;
         let nbrs = solve_line(line.0);
         let mut output = line.1.iter();
-        let (a, b, c, d) = (output.next().unwrap(), output.next().unwrap(), output.next().unwrap(), output.next().unwrap());
-        value += nbrs.iter().position(|n| difference(n, a).len() == 0).unwrap() * 1000;
-        value += nbrs.iter().position(|n| difference(n, b).len() == 0).unwrap() * 100;
-        value += nbrs.iter().position(|n| difference(n, c).len() == 0).unwrap() * 10;
-        value += nbrs.iter().position(|n| difference(n, d).len() == 0).unwrap() * 1;
+        let (a, b, c, d) = (
+            output.next().unwrap(),
+            output.next().unwrap(),
+            output.next().unwrap(),
+            output.next().unwrap(),
+        );
+        value += nbrs
+            .iter()
+            .position(|n| difference(n, a).len() == 0)
+            .unwrap()
+            * 1000;
+        value += nbrs
+            .iter()
+            .position(|n| difference(n, b).len() == 0)
+            .unwrap()
+            * 100;
+        value += nbrs
+            .iter()
+            .position(|n| difference(n, c).len() == 0)
+            .unwrap()
+            * 10;
+        value += nbrs
+            .iter()
+            .position(|n| difference(n, d).len() == 0)
+            .unwrap()
+            * 1;
 
         sum += value;
     }
 
-    println!("Answer part 2: {}", sum);
+    sum
 }
 
 fn solve_line(input: Vec<String>) -> [String; 10] {
@@ -70,7 +88,7 @@ fn solve_line(input: Vec<String>) -> [String; 10] {
             4 => nbrs[4] = word,
             3 => nbrs[7] = word,
             7 => nbrs[8] = word,
-            _ => ()
+            _ => (),
         }
     }
 
@@ -105,7 +123,7 @@ fn solve_line(input: Vec<String>) -> [String; 10] {
             }
         }
     }
-    
+
     nbrs.map(|s| s.to_string())
 }
 
