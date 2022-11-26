@@ -3,10 +3,9 @@ use petgraph::{
     graph::{Graph, NodeIndex},
 };
 
-const INPUT_FILE: &str = "input.txt";
-
-fn main() {
-    let (g, nodes) = create_graph(get_input());
+#[aoc::main(15)]
+fn main(input: &str) -> (&str, u64) {
+    let (g, nodes) = create_graph(get_input(input));
     let path = dijkstra(
         &g,
         nodes[0][0],
@@ -14,14 +13,13 @@ fn main() {
         |e| *e.weight(),
     );
 
-    println!(
-        "Total cost: {}",
-        path[&nodes[nodes.len() - 1][nodes[0].len() - 1]]
-    );
+    (
+        "INCORRECT",
+        path[&nodes[nodes.len() - 1][nodes[0].len() - 1]],
+    )
 }
 
-fn get_input() -> Vec<Vec<u64>> {
-    let input = std::fs::read_to_string(INPUT_FILE).expect("Failed to read file");
+fn get_input(input: &str) -> Vec<Vec<u64>> {
     let mut v: Vec<Vec<u64>> = Vec::new();
     for line in input.lines() {
         let mut elems: Vec<u64> = Vec::new();
@@ -40,10 +38,7 @@ fn get_input() -> Vec<Vec<u64>> {
     let mut matrix: Vec<Vec<u64>> = Vec::new();
     for i in 0..5 {
         for line in &v {
-            let values: Vec<u64> = line
-                .iter()
-                .map(|c| (c + i) % 10 + (c + i) / 10)
-                .collect();
+            let values: Vec<u64> = line.iter().map(|c| (c + i) % 10 + (c + i) / 10).collect();
             matrix.push(values);
         }
     }

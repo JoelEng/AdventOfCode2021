@@ -1,13 +1,18 @@
-use std::{str::Chars, cmp::{min, max}};
+use std::{
+    cmp::{max, min},
+    str::Chars,
+};
 
-const INPUT_FILE: &str = "input.txt";
-
-fn main() {
-    let input = get_input();
+#[aoc::main(16)]
+fn main(input: &str) -> (u64, u64) {
+    let input = input
+        .chars()
+        .map(|c| format!("{:0width$b}", c.to_digit(16).unwrap(), width = 4))
+        .collect::<String>();
     let chars = &mut input.chars();
     let (val, ver, _) = packet(chars);
-    println!("Answer part one: {}", ver);
-    println!("Answer part two: {}", val);
+
+    (ver, val)
 }
 
 fn packet(chars: &mut Chars) -> (u64, u64, u64) {
@@ -19,10 +24,10 @@ fn packet(chars: &mut Chars) -> (u64, u64, u64) {
         2 => operator(|a, b| min(a, b), chars),
         3 => operator(|a, b| max(a, b), chars),
         4 => literal(chars),
-        5 => operator(|a, b| if a > b {1} else {0}, chars),
-        6 => operator(|a, b| if a < b {1} else {0}, chars),
-        7 => operator(|a, b| if a == b {1} else {0}, chars),
-        _ => (0,0,0)
+        5 => operator(|a, b| if a > b { 1 } else { 0 }, chars),
+        6 => operator(|a, b| if a < b { 1 } else { 0 }, chars),
+        7 => operator(|a, b| if a == b { 1 } else { 0 }, chars),
+        _ => (0, 0, 0),
     };
     (val, ver + version, len + 6)
 }
@@ -31,7 +36,7 @@ fn operator<F: Fn(u64, u64) -> u64>(op: F, chars: &mut Chars) -> (u64, u64, u64)
     //Match the length type ID
     let (val, ver, len) = match take_u64(1, chars) {
         0 => operator_len(op, chars),
-        _ => operator_count(op, chars)
+        _ => operator_count(op, chars),
     };
     (val, ver, len + 1)
 }
@@ -92,12 +97,4 @@ fn take_u64(n: usize, chars: &mut Chars) -> u64 {
     } else {
         u64::from_str_radix(&s, 2).unwrap()
     }
-}
-
-fn get_input() -> String {
-    let input = std::fs::read_to_string(INPUT_FILE).expect("Failed to read file");
-    input
-        .chars()
-        .map(|c| format!("{:0width$b}", c.to_digit(16).unwrap(), width = 4))
-        .collect::<String>()
 }

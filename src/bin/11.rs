@@ -1,42 +1,41 @@
-const INPUT_FILE: &str = "input.txt";
-
-fn main() {
-    part_one();
+#[aoc::main(11)]
+fn main(input: &str) -> (u32, i32) {
+    //Tuples consist of the value and a boolean flashed_this_turn
+    let mut grid: Vec<Vec<(u8, bool)>> = input
+        .lines()
+        .map(|line| {
+            line.chars()
+                .map(|c| (c.to_digit(10).unwrap() as u8, false))
+                .collect()
+        })
+        .collect();
+    solve(&mut grid)
 }
 
-//Tuples consist of the value and a boolean flashed_this_turn
-fn get_input() -> Vec<Vec<(u8, bool)>> {
-    let input = std::fs::read_to_string(INPUT_FILE)
-        .expect("Failed to read file");
-    
-    input.lines().map(|line| {
-        line.chars().map(|c| {
-            (c.to_digit(10).unwrap() as u8, false)
-        }).collect()
-    }).collect()
-}
-
-fn part_one() {
-    let mut grid = get_input();
+fn solve(grid: &mut Vec<Vec<(u8, bool)>>) -> (u32, i32) {
     let mut total_flashes = 0;
     let mut has_won = false;
+    let mut p1 = 0;
+    let mut p2 = 0;
     for i in 1..500 {
-        increase_all(&mut grid);
+        increase_all(grid);
         loop {
-            let flashes = flash(&mut grid);
+            let flashes = flash(grid);
             total_flashes += flashes;
-            if flashes == 0 {break}
+            if flashes == 0 {
+                break;
+            }
         }
         if i == 100 {
-            println!("Answer part one: {}", total_flashes);
+            p1 = total_flashes;
         }
         if !has_won && check_part_two(&grid) {
-            println!("Answer part two: {}", i);
+            p2 = i;
             has_won = true;
         }
-        reset_has_flashed(&mut grid);
+        reset_has_flashed(grid);
     }
-
+    (p1, p2)
 }
 
 fn increase_all(grid: &mut Vec<Vec<(u8, bool)>>) {
@@ -64,7 +63,7 @@ fn flash(grid: &mut Vec<Vec<(u8, bool)>>) -> u32 {
     flashes
 }
 
-fn check_part_two(grid: &Vec<Vec<(u8, bool)>>) -> bool{
+fn check_part_two(grid: &Vec<Vec<(u8, bool)>>) -> bool {
     let mut has_won = true;
     for row in grid {
         for octopus in row {
@@ -99,7 +98,10 @@ fn increase_around(grid: &mut Vec<Vec<(u8, bool)>>, row_index: usize, oct_index:
     if row_index < grid.len() - 1 && oct_index > 0 && !grid[row_index + 1][oct_index - 1].1 {
         grid[row_index + 1][oct_index - 1].0 += 1;
     }
-    if row_index < grid.len() - 1 && oct_index < grid.len() - 1 && !grid[row_index + 1][oct_index + 1].1 {
+    if row_index < grid.len() - 1
+        && oct_index < grid.len() - 1
+        && !grid[row_index + 1][oct_index + 1].1
+    {
         grid[row_index + 1][oct_index + 1].0 += 1;
     }
 }

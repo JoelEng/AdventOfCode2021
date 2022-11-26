@@ -1,12 +1,13 @@
 use std::io;
 use std::io::Write; // <--- bring flush() into scope
 
-const INPUT_FILE: &str = "input.txt";
 const MATRIX_SIZE: usize = 1500;
 
-fn main() {
-    let (mut matrix, folds) = get_input();
+#[aoc::main(13)]
+fn main(input: &str) -> (u32, &str) {
+    let (mut matrix, folds) = get_input(input);
     let mut first_time = true;
+    let mut p1 = 0;
 
     for (dir, index) in folds {
         if dir == 'x' {
@@ -15,18 +16,16 @@ fn main() {
             matrix = fold_y(index, &mut matrix);
         }
         if first_time {
-            println!("Answer part one: {}", count_dots(&matrix));
+            p1 = count_dots(&matrix);
             first_time = false;
         }
     }
-    println!("Answer part two: ");
     print_matrix(&matrix);
+
+    (p1, "")
 }
 
-fn get_input() -> (Vec<Vec<bool>>, Vec<(char, usize)>) {
-    let input = std::fs::read_to_string(INPUT_FILE)
-        .expect("Failed to read file");
-
+fn get_input(input: &str) -> (Vec<Vec<bool>>, Vec<(char, usize)>) {
     let mut matrix = vec![vec![false; MATRIX_SIZE]; MATRIX_SIZE];
     let mut folds = vec![];
 

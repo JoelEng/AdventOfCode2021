@@ -1,22 +1,14 @@
 use std::collections::HashMap;
 
-const INPUT_FILE: &str = "input.txt";
 const OPENERS: [char; 4] = ['(', '[', '{', '<'];
 
-fn main() {
-    solve();
+#[aoc::main(10)]
+fn main(input: &str) -> (i32, u128) {
+    let input: Vec<Vec<char>> = input.lines().map(|line| line.chars().collect()).collect();
+    solve(input)
 }
 
-fn get_input() -> Vec<Vec<char>> {
-    std::fs::read_to_string(INPUT_FILE)
-        .expect("Failed to read file")
-        .lines()
-        .map(|line| line.chars().collect())
-        .collect()
-}
-
-fn solve() {
-    let input = get_input();
+fn solve(input: Vec<Vec<char>>) -> (i32, u128) {
     let mut illegal_char_score = 0;
     let mut incomplete_score;
     let mut corrupted;
@@ -43,7 +35,7 @@ fn solve() {
                         ']' => illegal_char_score += 57,
                         '}' => illegal_char_score += 1197,
                         '>' => illegal_char_score += 25137,
-                        _ => ()
+                        _ => (),
                     }
                     corrupted = true;
                     break;
@@ -59,15 +51,15 @@ fn solve() {
                     '[' => 2,
                     '{' => 3,
                     '<' => 4,
-                    _ => 0
+                    _ => 0,
                 }
             }
             incomplete_lines.push(incomplete_score);
         }
     }
 
-    println!("Answer part one: {}", illegal_char_score);
+    let p1 = illegal_char_score;
     incomplete_lines.sort();
     let middle = incomplete_lines.len() / 2;
-    println!("Answer part two: {:?}", incomplete_lines[middle]);
+    (p1, incomplete_lines[middle])
 }

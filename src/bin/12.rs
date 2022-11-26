@@ -1,34 +1,36 @@
 use itertools::Itertools;
 use std::collections::{HashMap, HashSet};
 
-const INPUT_FILE: &str = "input.txt";
+#[aoc::main(12)]
+fn main(input: &str) -> (usize, usize) {
+    let graph = get_input(input);
 
-fn main() {
-    let graph = get_input();
-    println!(
-        "Answer part one: {}",
-        routes_through(
-            &"start".to_string(),
-            false,
-            &vec!["start".to_string()],
-            &graph,
-            "start".to_string()
-        ).len()
-    );
-    println!(
-        "Answer part two: {}",
-        routes_through(
-            &"start".to_string(),
-            true,
-            &vec!["start".to_string()],
-            &graph,
-            "start".to_string()
-        ).len()
-    );
+    (p1(&graph), p2(&graph))
 }
 
-fn get_input() -> HashMap<String, Vec<String>> {
-    let input = std::fs::read_to_string(INPUT_FILE).expect("Failed to read file");
+fn p1(graph: &HashMap<String, Vec<String>>) -> usize {
+    routes_through(
+        &"start".to_string(),
+        false,
+        &vec!["start".to_string()],
+        graph,
+        "start".to_string(),
+    )
+    .len()
+}
+
+fn p2(graph: &HashMap<String, Vec<String>>) -> usize {
+    routes_through(
+        &"start".to_string(),
+        true,
+        &vec!["start".to_string()],
+        &graph,
+        "start".to_string(),
+    )
+    .len()
+}
+
+fn get_input(input: &str) -> HashMap<String, Vec<String>> {
     let mut graph: HashMap<String, Vec<String>> = HashMap::new();
     for line in input.lines() {
         let (a, b) = line.split('-').next_tuple().unwrap();
@@ -45,7 +47,7 @@ fn routes_through(
     can_revisit_small: bool,
     can_not_visit: &Vec<String>,
     graph: &HashMap<String, Vec<String>>,
-    path: String
+    path: String,
 ) -> HashSet<String> {
     if cave == "end" {
         let mut set = HashSet::new();
@@ -68,9 +70,21 @@ fn routes_through(
                 && cave != "start"
                 && neighbour != "end"
             {
-                paths.extend(routes_through(neighbour, false, &can_not_visit, graph, format!("{} {}", path, neighbour)));
+                paths.extend(routes_through(
+                    neighbour,
+                    false,
+                    &can_not_visit,
+                    graph,
+                    format!("{} {}", path, neighbour),
+                ));
             }
-            paths.extend(routes_through(neighbour, can_revisit_small, &new_can_not_visit, graph, format!("{} {}", path, neighbour)));
+            paths.extend(routes_through(
+                neighbour,
+                can_revisit_small,
+                &new_can_not_visit,
+                graph,
+                format!("{} {}", path, neighbour),
+            ));
         }
         paths
     }

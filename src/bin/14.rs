@@ -1,19 +1,20 @@
-use std::collections::HashMap;
 use itertools::Itertools;
+use std::collections::HashMap;
 
-const INPUT_FILE: &str = "input.txt";
-
-fn main() {
-    println!("Answer part one: {}", solve(10));
-    println!("Answer part two: {}", solve(40));
-    println!("Highest possible answer with u128: {}", solve(126));
+#[aoc::main(14)]
+fn main(input: &str) -> (u64, u64) {
+    (solve(10, input), solve(40, input))
 }
 
-fn get_input() -> (HashMap<String, u128>, HashMap<char, u128>, HashMap<String, (String, String)>) {
-    let input = std::fs::read_to_string(INPUT_FILE)
-        .expect("Failed to read file");
+fn get_input(
+    input: &str,
+) -> (
+    HashMap<String, u64>,
+    HashMap<char, u64>,
+    HashMap<String, (String, String)>,
+) {
     let mut lines = input.lines();
-    
+
     let mut rules = HashMap::new();
     let init_vals = lines.next().unwrap().to_string();
     let mut polymer = HashMap::new();
@@ -26,11 +27,19 @@ fn get_input() -> (HashMap<String, u128>, HashMap<char, u128>, HashMap<String, (
         let pair = &line[0..2];
         let insertion = line.chars().last().unwrap();
         let mut chars = pair.chars();
-        rules.insert(String::from(pair), (format!("{}{}", chars.next().unwrap(), insertion), format!("{}{}", insertion, chars.next().unwrap())));
+        rules.insert(
+            String::from(pair),
+            (
+                format!("{}{}", chars.next().unwrap(), insertion),
+                format!("{}{}", insertion, chars.next().unwrap()),
+            ),
+        );
     }
     //Create polymer
     for tuple in init_vals.chars().tuple_windows::<(char, char)>() {
-        let tuple = polymer.entry(format!("{}{}", tuple.0, tuple.1)).or_insert(0);
+        let tuple = polymer
+            .entry(format!("{}{}", tuple.0, tuple.1))
+            .or_insert(0);
         *tuple += 1;
     }
     //Create counter
@@ -42,8 +51,8 @@ fn get_input() -> (HashMap<String, u128>, HashMap<char, u128>, HashMap<String, (
     (polymer, counter, rules)
 }
 
-fn solve(iterations: u32) -> u128 {
-    let (mut polymer, mut counter, rules) = get_input();
+fn solve(iterations: u32, input: &str) -> u64 {
+    let (mut polymer, mut counter, rules) = get_input(input);
 
     //Insertions
     for _ in 0..iterations {
