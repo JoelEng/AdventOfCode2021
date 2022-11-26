@@ -19,10 +19,10 @@ fn main() {
             .output()
             .unwrap();
         let output = String::from_utf8(cmd.stdout).unwrap();
-        total_time += match extract_time(&output) {
+        match extract_time(&output) {
             Some(x) => {
                 days_completed += 1;
-                x
+                total_time += x;
             }
             None => continue,
         };
@@ -36,7 +36,7 @@ fn main() {
         );
     } else {
         println!(
-            "{} days completed. Total time: {}ms\x1b[0m",
+            "{} days completed in {}ms\x1b[0m",
             days_completed, total_time
         );
     }
